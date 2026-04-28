@@ -92,9 +92,6 @@
         }
 
         currentAudio = new Audio(guiltAudioPath);
-        currentAudio.addEventListener('ended', () => {
-          adSuccess();
-        }, { once: true });
         currentAudio.addEventListener('error', () => {
           // The asset may be absent while developing.
         }, { once: true });
@@ -137,6 +134,11 @@
 
         if (skipAttempts >= 3) {
           skipButton.classList.add('escalated');
+        }
+
+        if (skipAttempts > 5) {
+          adSuccess();
+          return;
         }
 
         playGuiltAudio();
