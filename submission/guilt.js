@@ -1,11 +1,15 @@
 const hoverFilter = 'saturate(2) sepia(0.4) contrast(1.3)';
-let skipAttempts = 0;
 let currentAudio = null;
 
 const skipContainer = document.getElementById('skip');
 const skipButton = document.getElementById('skipButton');
 //const guiltAudioPath = './skip-audio.mp3';
 const guiltAudioPath = './CottonEyeJoe.mp3';
+
+// Skip action globals
+let skipAttempts = 0;
+const skipAttemptCooldown = 1000; // miliseconds
+let lastSkipTimestamp = undefined;
 
 (function (window, document) {
 
@@ -38,7 +42,18 @@ const guiltAudioPath = './CottonEyeJoe.mp3';
 		setVideoFilter('');
 	});
 
-	skipButton.addEventListener('click', () => {
+	skipButton.addEventListener('click', (event) => {
+		// Handle cooldowns
+		// If they're on cooldown, don't do anything.
+		if (lastSkipTimestamp && event.timeStamp - lastSkipTimestamp < skipAttemptCooldown){
+			return;
+		}
+
+		// They're not on cooldown, so do a successful skip and start a cooldown
+		lastSkipTimestamp = event.timeStamp;
+		// showRateLimitMessage(event.timeStamp); //BROKEN
+
+		// Handle attempts
 		skipAttempts += 1;
 
 		if (skipAttempts >= 3) {
@@ -79,4 +94,25 @@ function playGuiltAudio() {
 	currentAudio.play().catch(() => {
 		// Browser playback policies can block autoplay-style calls.
 	});
+}
+
+function showRateLimitMessage(timestamp){
+	console.log(`timestamp ${timestamp} ${typeof(timestamp)}`)
+	const cooldownRemaining = skipAttemptCooldown - (timestamp - lastSkipTimestamp);
+	const cooldownRemainingSeconds = (cooldownRemaining/1000).toFixed(1);
+	skipContainer.innerHTML = `Wait ${cooldownRemainingSeconds}...`;
+	console.log(`rate message update to ${cooldownRemaining}`)
+
+	// Timeout loop for updating the counter
+	//BROKEN: passing timestamp into here causes it to become NaN. probably memory shenanigans idk
+	setTimeout((timestamp) => {
+		// Return to normal skip and don't loop if the cooldown is over
+		if (cooldownRemaining <= 0){
+			skipContainer.innerHTML = "Skip";
+			return;
+		}
+
+		// Cooldown not over, continue the loop
+		showRateLimitMessage(timestamp + skipAttemptCooldown/10);
+	}, skipAttemptCooldown/10);
 }
