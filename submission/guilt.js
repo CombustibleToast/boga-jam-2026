@@ -1,36 +1,12 @@
+const hoverFilter = 'saturate(2) sepia(0.4) contrast(1.3)';
+let skipAttempts = 0;
+let currentAudio = null;
+
+const skipButton = document.getElementById('skip');
+//const guiltAudioPath = './skip-audio.mp3';
+const guiltAudioPath = './CottonEyeJoe.mp3';
+
 (function (window, document) {
-	// This is how you tell the parent window that the ad was successfully skipped.
-	function adSuccess() {
-		window.top.postMessage({ type: 'success' }, '*');
-	}
-
-	const skipButton = document.getElementById('skip');
-	//const guiltAudioPath = './skip-audio.mp3';
-	const guiltAudioPath = './CottonEyeJoe.mp3';
-
-	const hoverFilter = 'saturate(2) sepia(0.4) contrast(1.3)';
-	let skipAttempts = 0;
-	let currentAudio = null;
-
-	function setVideoFilter(value) {
-		window.top.postMessage({ type: 'setVideoFilter', value }, '*');
-	}
-
-	function playGuiltAudio() {
-		if (currentAudio) {
-			currentAudio.pause();
-			currentAudio.currentTime = 0;
-		}
-
-		currentAudio = new Audio(guiltAudioPath);
-		currentAudio.addEventListener('error', () => {
-			// The asset may be absent while developing.
-		}, { once: true });
-
-		currentAudio.play().catch(() => {
-			// Browser playback policies can block autoplay-style calls.
-		});
-	}
 
 	// Listen for messages from the game shell
 	window.addEventListener('message', (event) => {
@@ -76,3 +52,28 @@
 	});
 
 })(window, document);
+
+// This is how you tell the parent window that the ad was successfully skipped.
+function adSuccess() {
+	window.top.postMessage({ type: 'success' }, '*');
+}
+
+function setVideoFilter(value) {
+	window.top.postMessage({ type: 'setVideoFilter', value }, '*');
+}
+
+function playGuiltAudio() {
+	if (currentAudio) {
+		currentAudio.pause();
+		currentAudio.currentTime = 0;
+	}
+
+	currentAudio = new Audio(guiltAudioPath);
+	currentAudio.addEventListener('error', () => {
+		// The asset may be absent while developing.
+	}, { once: true });
+
+	currentAudio.play().catch(() => {
+		// Browser playback policies can block autoplay-style calls.
+	});
+}
