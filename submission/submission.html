@@ -22,26 +22,61 @@
 
     #skip {
       display: none; /* Hidden until ad starts */
+      content: 'Skip';
       position: absolute;
-      bottom: 60px;
-      right: 18px;
-      width: 116px;
-      height: 30px;
+      bottom: 10%;
+      right: 0%;
+      width: 15%;
+      height: 10%;
+      border-radius: 7px 0 0 7px;
+      border: 1px solid rgba(0, 0, 0, 0.85);
+      border-right-width: 0;
+      background: rgba(0, 0, 0, 0.72);
+      color: #fff;
+      font-family: sans-serif;
+      font-size: 1.4rem;
+      line-height: 46px;
+      text-align: center;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    #skipButton {
+      background: magenta; /*for debugging so WE can see the button*/
+      cursor: inherit;
+      position: absolute; /*needs to be different if we want to move it around*/
+      border: none;
+      height: 80%;
+      width: 30%;
+      left: 50%;
+      top: 10%;
+    }
+
+    #oldskip {
+      display: none; /* Hidden until ad starts */
+      color: white;
+      position: absolute;
+      bottom: 10%;
+      right: 5%;
+      width: 4%;
+      height: 5%;
       padding: 0;
       border: 0;
       background: transparent;
       cursor: pointer;
+      /* background-color: magenta; /*for debugging so WE can see the button */
     }
 
     /* The true clickable region is smaller than the drawn button. */
-    #skip::before {
-      content: 'Skip them,';
+    #oldskip::before {
+      content: 'Skip';
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 184px;
-      height: 46px;
+      width: 300%; /* Slightly bigger here */
+      height: 200%;
+      left: 73%;
       border-radius: 7px 0 0 7px;
       border: 1px solid rgba(0, 0, 0, 0.85);
       border-right-width: 0;
@@ -55,7 +90,7 @@
       white-space: nowrap;
     }
 
-    #skip.escalated::before {
+    #oldskip.escalated::before {
       content: 'Why skip us?';
     }
   </style>
@@ -63,9 +98,12 @@
 
 <body>
   <div id="overlay-container">
-    <button id="skip" aria-label="Skip them,"></button>
+    <div id="skip"> 
+      Skip
+      <button id="skipButton">a</button>
+    </div>
+    <button id="debugpause">pause</button>
   </div>
-
   <script type="text/javascript" src="./guilt.js"></script>
 </body>
 </html>
