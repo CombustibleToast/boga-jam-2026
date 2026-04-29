@@ -8,7 +8,7 @@ const skipText = document.getElementById('skipText');
 const guiltAudioPath = './CottonEyeJoe.mp3';
 
 // Skip action globals
-const skipAttemptCooldown = 1000; // miliseconds
+const skipAttemptCooldown = 3000; // miliseconds
 let lastSkipTimestamp = undefined;
 
 // Escalations
@@ -77,7 +77,7 @@ const escalationSecondStageAttempts = 5;
 		// TODO: Play video
 		// Change button text
 		if (escalation == 1) {
-			skipContainer.innerHTML = escalationFirstStageString;
+			skipText.innerHTML = escalationFirstStageString;
 		}
 
 		// Escalation 2
