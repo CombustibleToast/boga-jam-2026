@@ -7,9 +7,19 @@ const skipButton = document.getElementById('skipButton');
 const guiltAudioPath = './CottonEyeJoe.mp3';
 
 // Skip action globals
-let skipAttempts = 0;
 const skipAttemptCooldown = 1000; // miliseconds
 let lastSkipTimestamp = undefined;
+
+// Escalations
+let skipAttempts = 0;
+let escalation = 0;
+
+// Escalation stage 1
+const escalationFirstStageAttempts = 3;
+const escalationFirstStageString = "Why skip us?"
+
+//Escalation stage 2
+const escalationSecondStageAttempts = 5;
 
 (function (window, document) {
 
@@ -53,19 +63,29 @@ let lastSkipTimestamp = undefined;
 		lastSkipTimestamp = event.timeStamp;
 		// showRateLimitMessage(event.timeStamp); //BROKEN
 
-		// Handle attempts
-		skipAttempts += 1;
+		// Handle Escalations
+		incrementEscalation(1);
 
-		if (skipAttempts >= 3) {
-			skipContainer.classList.add('escalated');
+		// Escalation 0
+		// Just play audio
+		if (escalation == 0){
+			playGuiltAudio();
 		}
 
-		if (skipAttempts > 5) {
+		// Escalation 1
+		// TODO: Play video
+		// Change button text
+		if (escalation == 1) {
+			skipContainer.innerHTML = escalationFirstStageString;
+		}
+
+		// Escalation 2
+		// ???
+		// Show the x button that skips?
+		if (escalation == 2) {
 			adSuccess();
 			return;
 		}
-
-		playGuiltAudio();
 	});
 
 	document.getElementById("debugpause").addEventListener('click', () => {window.top.postMessage({type: 'pause'}, '*')});
@@ -78,6 +98,19 @@ function adSuccess() {
 
 function setVideoFilter(value) {
 	window.top.postMessage({ type: 'setVideoFilter', value }, '*');
+}
+
+function incrementEscalation(incrementAmount){
+	skipAttempts += incrementAmount;
+
+	// I don't like this, but it works
+	if (skipAttempts >= escalationSecondStageAttempts){
+		return 2;
+	}
+	if (skipAttempts >= escalationFirstStageAttempts){
+		return 1;
+	}
+	return 0;
 }
 
 function playGuiltAudio() {
