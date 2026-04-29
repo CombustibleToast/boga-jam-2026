@@ -43,6 +43,7 @@
 
     #skipButton {
       background: magenta; /*for debugging so WE can see the button*/
+      /* background: none; */
       cursor: inherit;
       position: absolute; /*needs to be different if we want to move it around*/
       border: none;
@@ -99,7 +100,7 @@
 <body>
   <div id="overlay-container">
     <div id="skip"> 
-      Skip
+      <div id="skipText">Skip</div>
       <button id="skipButton"></button>
     </div>
     <button id="debugpause">pause</button>

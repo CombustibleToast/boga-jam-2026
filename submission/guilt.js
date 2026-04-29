@@ -3,6 +3,7 @@ let currentAudio = null;
 
 const skipContainer = document.getElementById('skip');
 const skipButton = document.getElementById('skipButton');
+const skipText = document.getElementById('skipText');
 //const guiltAudioPath = './skip-audio.mp3';
 const guiltAudioPath = './CottonEyeJoe.mp3';
 
@@ -54,17 +55,17 @@ const escalationSecondStageAttempts = 5;
 
 	skipButton.addEventListener('click', (event) => {
 		// Handle cooldowns
-		// If they're on cooldown, don't do anything.
+		// If they're on cooldown tell them and don't do anything else.
 		if (lastSkipTimestamp && event.timeStamp - lastSkipTimestamp < skipAttemptCooldown){
+			showRateLimitMessage(event.timeStamp);
 			return;
 		}
 
 		// They're not on cooldown, so do a successful skip and start a cooldown
 		lastSkipTimestamp = event.timeStamp;
-		// showRateLimitMessage(event.timeStamp); //BROKEN
 
 		// Handle Escalations
-		incrementEscalation(1);
+		escalation = incrementEscalation(1);
 
 		// Escalation 0
 		// Just play audio
@@ -133,19 +134,12 @@ function showRateLimitMessage(timestamp){
 	console.log(`timestamp ${timestamp} ${typeof(timestamp)}`)
 	const cooldownRemaining = skipAttemptCooldown - (timestamp - lastSkipTimestamp);
 	const cooldownRemainingSeconds = (cooldownRemaining/1000).toFixed(1);
-	skipContainer.innerHTML = `Wait ${cooldownRemainingSeconds}...`;
+	skipText.innerHTML = `Wait ${cooldownRemainingSeconds}...`;
 	console.log(`rate message update to ${cooldownRemaining}`)
 
-	// Timeout loop for updating the counter
-	//BROKEN: passing timestamp into here causes it to become NaN. probably memory shenanigans idk
-	setTimeout((timestamp) => {
-		// Return to normal skip and don't loop if the cooldown is over
-		if (cooldownRemaining <= 0){
-			skipContainer.innerHTML = "Skip";
-			return;
-		}
-
-		// Cooldown not over, continue the loop
-		showRateLimitMessage(timestamp + skipAttemptCooldown/10);
-	}, skipAttemptCooldown/10);
+	// Change back to normal when cooldown is up
+	// Definitely causes a race condition with itself if multiple clicks but whatever it's fine for this
+	setTimeout(() => {
+		skipText.textContent = "Skip";
+	}, cooldownRemaining);
 }
