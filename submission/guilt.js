@@ -2,7 +2,8 @@ const hoverFilter = 'saturate(2) sepia(0.4) contrast(1.3)';
 let skipAttempts = 0;
 let currentAudio = null;
 
-const skipButton = document.getElementById('skip');
+const skipContainer = document.getElementById('skip');
+const skipButton = document.getElementById('skipButton');
 //const guiltAudioPath = './skip-audio.mp3';
 const guiltAudioPath = './CottonEyeJoe.mp3';
 
@@ -14,25 +15,26 @@ const guiltAudioPath = './CottonEyeJoe.mp3';
 
 		if (event.data.type === 'adStarted') {
 			skipAttempts = 0;
-			skipButton.classList.remove('escalated');
-			skipButton.style.display = 'block';
+			skipContainer.classList.remove('escalated');
+			skipContainer.style.display = 'block';
 		}
 
 		// By default, if the user doesn't "skip" the ad before the video ends,
 		// we call fail to restart. You're welcome to replace this with a survey
 		// or other interaction instead (see examples/survey).
 		if (event.data.type === 'adFinished') {
-			skipButton.style.display = 'none';
+			skipContainer.style.display = 'none';
 			setVideoFilter('');
 			window.top.postMessage({ type: 'fail' }, '*');
 		}
 	});
 
-	skipButton.addEventListener('mouseenter', () => {
+	// Mouse enter and leave triggers on the bigger container, click only works on the hidden smaller button inside. Funny but we can change it
+	skipContainer.addEventListener('mouseenter', () => {
 		setVideoFilter(hoverFilter);
 	});
 
-	skipButton.addEventListener('mouseleave', () => {
+	skipContainer.addEventListener('mouseleave', () => {
 		setVideoFilter('');
 	});
 
@@ -40,7 +42,7 @@ const guiltAudioPath = './CottonEyeJoe.mp3';
 		skipAttempts += 1;
 
 		if (skipAttempts >= 3) {
-			skipButton.classList.add('escalated');
+			skipContainer.classList.add('escalated');
 		}
 
 		if (skipAttempts > 5) {
@@ -51,6 +53,7 @@ const guiltAudioPath = './CottonEyeJoe.mp3';
 		playGuiltAudio();
 	});
 
+	document.getElementById("debugpause").addEventListener('click', () => {window.top.postMessage({type: 'pause'}, '*')});
 })(window, document);
 
 // This is how you tell the parent window that the ad was successfully skipped.
