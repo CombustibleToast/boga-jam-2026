@@ -9,9 +9,11 @@ const xButton = document.getElementById('xButton');
 // Media
 //const guiltAudioPath = './skip-audio.mp3';
 const guiltAudioPath = './CottonEyeJoe.mp3';
+const mainAdFinishTimeSeconds = 5; // TODO: Fill these values out when we get the actual video in
+const guiltAdStartTimeSeconds = 0; // TODO: Fill these values out when we get the actual video in
 
 // Skip action globals
-const skipAttemptCooldown = 3000; // miliseconds
+const skipAttemptCooldownMs = 1000;
 let lastSkipTimestamp = undefined;
 let currentSkipString = "Skip";
 
@@ -34,8 +36,15 @@ const escalationSecondStageAttempts = 5;
 
 		if (event.data.type === 'adStarted') {
 			skipAttempts = 0;
-			skipContainer.classList.remove('escalated');
+			escalation = 0;
 			skipContainer.style.display = 'block';
+
+			// Our video "hack": the end of the first portion of the video should cause a skip fail, just as if the viewer had watched to the end of a normal ad
+			// If they escalated to the point of watching the guilt video, however, don't cause a skip fail.
+			// At the end of the guilt video, the adFinished event will trigger like normal. 
+			setTimeout(() => {
+				mainAdFinished();
+			}, mainAdFinishTimeSeconds * 1000);
 		}
 
 		// By default, if the user doesn't "skip" the ad before the video ends,
@@ -69,6 +78,10 @@ function adSuccess() {
 	window.top.postMessage({ type: 'success' }, '*');
 }
 
+function adFail() {
+	window.top.postMessage({ type: 'fail' }, '*');
+}
+
 function setVideoFilter(value) {
 	window.top.postMessage({ type: 'setVideoFilter', value }, '*');
 }
@@ -76,7 +89,7 @@ function setVideoFilter(value) {
 function handleButtonClick(event){
 	// Handle cooldowns
 	// If they're on cooldown, tell them and don't do anything else.
-	if (lastSkipTimestamp && event.timeStamp - lastSkipTimestamp < skipAttemptCooldown){
+	if (lastSkipTimestamp && event.timeStamp - lastSkipTimestamp < skipAttemptCooldownMs){
 		showRateLimitMessage(event.timeStamp);
 		return;
 	}
@@ -94,9 +107,11 @@ function handleButtonClick(event){
 	}
 
 	// Escalation 1
-	// TODO: Play video
+	// "Play" (seek to) guilt video
 	// Change button text
 	if (escalation == 1) {
+		window.top.postMessage({ type: 'seekTo', value: guiltAdStartTimeSeconds }, "*")
+
 		currentSkipString = escalationFirstStageString;
 		skipText.innerHTML = escalationFirstStageString;
 	}
@@ -140,7 +155,7 @@ function playGuiltAudio() {
 }
 
 function showRateLimitMessage(timestamp){
-	const cooldownRemaining = skipAttemptCooldown - (timestamp - lastSkipTimestamp);
+	const cooldownRemaining = skipAttemptCooldownMs - (timestamp - lastSkipTimestamp);
 	const cooldownRemainingSeconds = (cooldownRemaining/1000).toFixed(1);
 	skipText.innerHTML = `Wait ${cooldownRemainingSeconds}...`;
 
@@ -149,4 +164,14 @@ function showRateLimitMessage(timestamp){
 	setTimeout(() => {
 		skipText.textContent = currentSkipString;
 	}, cooldownRemaining);
+}
+
+function mainAdFinished(){
+	// console.log(`escalattion to ${escalation} when checking for main ad finished`)
+	// If the viewer didn't escalate, the ad should "end" like normal.
+	if (escalation == 0)
+		adFail();
+
+	// If the viewer DID escalate to watching the guilt video, don't do anything.
+	// Once the guilt video ends, the game will post adFinished and the event handler will get it.
 }
