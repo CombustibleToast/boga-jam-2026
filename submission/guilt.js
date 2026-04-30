@@ -53,41 +53,7 @@ const escalationSecondStageAttempts = 5;
 		setVideoFilter('');
 	});
 
-	skipButton.addEventListener('click', (event) => {
-		// Handle cooldowns
-		// If they're on cooldown tell them and don't do anything else.
-		if (lastSkipTimestamp && event.timeStamp - lastSkipTimestamp < skipAttemptCooldown){
-			showRateLimitMessage(event.timeStamp);
-			return;
-		}
-
-		// They're not on cooldown, so do a successful skip and start a cooldown
-		lastSkipTimestamp = event.timeStamp;
-
-		// Handle Escalations
-		escalation = incrementEscalation(1);
-
-		// Escalation 0
-		// Just play audio
-		if (escalation == 0){
-			playGuiltAudio();
-		}
-
-		// Escalation 1
-		// TODO: Play video
-		// Change button text
-		if (escalation == 1) {
-			skipText.innerHTML = escalationFirstStageString;
-		}
-
-		// Escalation 2
-		// ???
-		// Show the x button that skips?
-		if (escalation == 2) {
-			adSuccess();
-			return;
-		}
-	});
+	skipButton.addEventListener('click', handleButtonClick);
 
 	document.getElementById("debugpause").addEventListener('click', () => {window.top.postMessage({type: 'pause'}, '*')});
 })(window, document);
@@ -99,6 +65,41 @@ function adSuccess() {
 
 function setVideoFilter(value) {
 	window.top.postMessage({ type: 'setVideoFilter', value }, '*');
+}
+
+function handleButtonClick(event){
+	// Handle cooldowns
+	// If they're on cooldown tell them and don't do anything else.
+	if (lastSkipTimestamp && event.timeStamp - lastSkipTimestamp < skipAttemptCooldown){
+		showRateLimitMessage(event.timeStamp);
+		return;
+	}
+
+	// They're not on cooldown, so do a successful skip and start a cooldown
+	lastSkipTimestamp = event.timeStamp;
+
+	// Handle Escalations
+	escalation = incrementEscalation(1);
+
+	// Escalation 0
+	// Just play audio
+	if (escalation == 0){
+		playGuiltAudio();
+	}
+
+	// Escalation 1
+	// TODO: Play video
+	// Change button text
+	if (escalation == 1) {
+		skipText.innerHTML = escalationFirstStageString;
+	}
+
+	// Escalation 2
+	// Disable button functionality
+	// Show the x button that skips?
+	if (escalation == 2) {
+		skipButton.removeEventListener('click', handleButtonClick)
+	}
 }
 
 function incrementEscalation(incrementAmount){
