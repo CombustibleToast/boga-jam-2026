@@ -4,12 +4,16 @@ let currentAudio = null;
 const skipContainer = document.getElementById('skip');
 const skipButton = document.getElementById('skipButton');
 const skipText = document.getElementById('skipText');
+const xButton = document.getElementById('xButton');
+
+// Media
 //const guiltAudioPath = './skip-audio.mp3';
 const guiltAudioPath = './CottonEyeJoe.mp3';
 
 // Skip action globals
 const skipAttemptCooldown = 3000; // miliseconds
 let lastSkipTimestamp = undefined;
+let currentSkipString = "Skip";
 
 // Escalations
 let skipAttempts = 0;
@@ -44,7 +48,7 @@ const escalationSecondStageAttempts = 5;
 		}
 	});
 
-	// Mouse enter and leave triggers on the bigger container, click only works on the hidden smaller button inside. Funny but we can change it
+	// Mouse enter and leave triggers on the bigger container, click only works on the hidden smaller button inside.
 	skipContainer.addEventListener('mouseenter', () => {
 		setVideoFilter(hoverFilter);
 	});
@@ -54,6 +58,8 @@ const escalationSecondStageAttempts = 5;
 	});
 
 	skipButton.addEventListener('click', handleButtonClick);
+
+	xButton.addEventListener('click', adSuccess);
 
 	document.getElementById("debugpause").addEventListener('click', () => {window.top.postMessage({type: 'pause'}, '*')});
 })(window, document);
@@ -69,7 +75,7 @@ function setVideoFilter(value) {
 
 function handleButtonClick(event){
 	// Handle cooldowns
-	// If they're on cooldown tell them and don't do anything else.
+	// If they're on cooldown, tell them and don't do anything else.
 	if (lastSkipTimestamp && event.timeStamp - lastSkipTimestamp < skipAttemptCooldown){
 		showRateLimitMessage(event.timeStamp);
 		return;
@@ -91,14 +97,16 @@ function handleButtonClick(event){
 	// TODO: Play video
 	// Change button text
 	if (escalation == 1) {
+		currentSkipString = escalationFirstStageString;
 		skipText.innerHTML = escalationFirstStageString;
 	}
 
 	// Escalation 2
 	// Disable button functionality
-	// Show the x button that skips?
+	// Show the x button that skips
 	if (escalation == 2) {
-		skipButton.removeEventListener('click', handleButtonClick)
+		skipButton.removeEventListener('click', handleButtonClick);
+		xButton.style.display = "block";
 	}
 }
 
@@ -132,15 +140,13 @@ function playGuiltAudio() {
 }
 
 function showRateLimitMessage(timestamp){
-	console.log(`timestamp ${timestamp} ${typeof(timestamp)}`)
 	const cooldownRemaining = skipAttemptCooldown - (timestamp - lastSkipTimestamp);
 	const cooldownRemainingSeconds = (cooldownRemaining/1000).toFixed(1);
 	skipText.innerHTML = `Wait ${cooldownRemainingSeconds}...`;
-	console.log(`rate message update to ${cooldownRemaining}`)
 
 	// Change back to normal when cooldown is up
 	// Definitely causes a race condition with itself if multiple clicks but whatever it's fine for this
 	setTimeout(() => {
-		skipText.textContent = "Skip";
+		skipText.textContent = currentSkipString;
 	}, cooldownRemaining);
 }

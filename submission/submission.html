@@ -22,7 +22,6 @@
 
     #skip {
       display: none; /* Hidden until ad starts */
-      content: 'Skip';
       position: absolute;
       bottom: 10%;
       right: 0%;
@@ -51,6 +50,18 @@
       width: 30%;
       left: 50%;
       top: 10%;
+    }
+
+    #xButton {
+      display: none;
+      background-color: #00000050;
+      border-radius: 100%;
+      border: 2px solid #000;
+      color: white;
+      position: absolute;
+      right: 2%;
+      top: 2%;
+      justify-content: center;
     }
 
     #oldskip {
@@ -104,6 +115,7 @@
       <button id="skipButton"></button>
     </div>
     <button id="debugpause">pause</button>
+    <button id="xButton">⤫</button>
   </div>
   <script type="text/javascript" src="./guilt.js"></script>
 </body>
