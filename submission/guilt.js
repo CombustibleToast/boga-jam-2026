@@ -6,14 +6,38 @@ const skipButton = document.getElementById('skipButton');
 const skipText = document.getElementById('skipText');
 const xButton = document.getElementById('xButton');
 
+// Difficulty configuration
+// Change DIFFICULTY to 'easy', 'normal', or 'hard', or tweak values directly in the preset objects below.
+const DIFFICULTY = 'normal';
+
+const DIFFICULTY_PRESETS = {
+	easy: {
+		skipCooldownMs: 2500,       // How long between skip attempts
+		escalation1Attempts: 2,     // Skip attempts before stage 1 (guilt video)
+		escalation2Attempts: 4,     // Skip attempts before stage 2 (x button unlocked)
+	},
+	normal: {
+		skipCooldownMs: 4000,
+		escalation1Attempts: 3,
+		escalation2Attempts: 6,
+	},
+	hard: {
+		skipCooldownMs: 5500,
+		escalation1Attempts: 4,
+		escalation2Attempts: 8,
+	},
+};
+
+const config = DIFFICULTY_PRESETS[DIFFICULTY];
+
 // Media
 // const guiltAudioPath = './CottonEyeJoe.mp3';
 const guiltAudioPath = './guilt_audio.mp3';
-const mainAdFinishTimeSeconds = 160; 
-const guiltAdStartTimeSeconds = 170; 
+const mainAdFinishTimeSeconds = 160;
+const guiltAdStartTimeSeconds = 170;
 
 // Skip action globals
-const skipAttemptCooldownMs = 4000;
+const skipAttemptCooldownMs = config.skipCooldownMs;
 let lastSkipTimestamp = undefined;
 let currentSkipString = "Skip";
 
@@ -22,11 +46,11 @@ let skipAttempts = 0;
 let escalation = 0;
 
 // Escalation stage 1
-const escalationFirstStageAttempts = 3;
+const escalationFirstStageAttempts = config.escalation1Attempts;
 const escalationFirstStageString = "Why skip us?"
 
 //Escalation stage 2
-const escalationSecondStageAttempts = 6;
+const escalationSecondStageAttempts = config.escalation2Attempts;
 let guiltAdPlaying = false;
 
 (function (window, document) {

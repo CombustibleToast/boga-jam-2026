@@ -10,10 +10,10 @@ This repository contains the code for our entry "Kind and Rewind" in the Kitboga
 
 - The button is smaller than the UI implies, yet hovering the cursor over any part of the area provides UX feedback as if a click SHOULD work.
 - Every skip attempt has a cooldown.
-- Plays a sound effect on click (escalation 0).
-- Plays a guilt trip video after 3 attempts (escalation 1).
-- Displays a small X button after 7 attempts (escalation 2).
-- [X] button is the thing that actually skips.
+- **Escalation 0:** Plays a sound effect on click .
+- **Escalation 1:** Plays a guilt trip video after 3 attempts.
+- **Escalation 2:** Displays a small **X** button after 7 attempts.
+  -  The **X** button is what can actually skip the ad.
 
 
 ## The Video
@@ -25,10 +25,17 @@ It's designed to be believable at first but increasingly difficult to sit throug
 
 ## Config
 
-Key timing constants in `guilt.js`:
-- **Main ad duration**: 3 min 55 seconds (235 seconds)
-- **Guilt ad start time**: X seconds
-- **Skip cooldown**: 4000ms (4 seconds)
-- **Escalation 1 threshold**: 3 attempts
-- **Escalation 2 threshold**: 6 attempts
+Difficulty can be changed in `submission/guilt.js` by setting the `DIFFICULTY` constant near the top of the file:
+
+```js
+const DIFFICULTY = 'normal'; // 'easy', 'normal', or 'hard'
+```
+
+| Setting | Easy | Normal | Hard |
+|---|---|---|---|
+| Skip cooldown | 2500ms | 4000ms | 5500ms |
+| Escalation 1 (guilt video) | 2 attempts | 3 attempts | 4 attempts |
+| Escalation 2 (X button) | 4 attempts | 6 attempts | 8 attempts |
+
+Individual values can also be tweaked directly inside the preset objects in `DIFFICULTY_PRESETS`.
 
