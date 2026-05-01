@@ -10,7 +10,7 @@ const xButton = document.getElementById('xButton');
 //const guiltAudioPath = './skip-audio.mp3';
 // const guiltAudioPath = './CottonEyeJoe.mp3';
 const guiltAudioPath = './guilt_audio.mp3';
-const mainAdFinishTimeSeconds = 140; 
+const mainAdFinishTimeSeconds = 160; 
 const guiltAdStartTimeSeconds = 170; 
 
 // Skip action globals
@@ -71,8 +71,6 @@ let guiltAdPlaying = false;
 	skipButton.addEventListener('click', handleButtonClick);
 
 	xButton.addEventListener('click', adSuccess);
-
-	document.getElementById("debugpause").addEventListener('click', () => {window.top.postMessage({type: 'pause'}, '*')});
 })(window, document);
 
 // This is how you tell the parent window that the ad was successfully skipped.
@@ -98,7 +96,7 @@ function handleButtonClick(event){
 
 	// They're not on cooldown, so do a successful skip attempt and start a cooldown
 	lastSkipTimestamp = event.timeStamp;
-	skipText.textContent = 'Skipping...';
+	showRateLimitMessage(event.timeStamp);
 
 	// Handle Escalations
 	escalation = incrementEscalation(1);
@@ -127,6 +125,7 @@ function handleButtonClick(event){
 	// Show the x button that skips
 	if (escalation == 2) {
 		skipButton.removeEventListener('click', handleButtonClick);
+		skipText.textContent = "Skip Enabled"
 		xButton.style.display = "block";
 	}
 }
@@ -176,8 +175,11 @@ function showRateLimitMessage(timestamp){
 function mainAdFinished(){
 	// console.log(`escalattion to ${escalation} when checking for main ad finished`)
 	// If the viewer didn't escalate, the ad should "end" like normal.
-	if (escalation == 0)
+	// Pause to make sure they don't accidentally make it to the guilt portion.
+	if (escalation == 0){
+		window.top.postMessage({type: 'pause'}, '*');
 		adFail();
+	}
 
 	// If the viewer DID escalate to watching the guilt video, don't do anything.
 	// Once the guilt video ends, the game will post adFinished and the event handler will get it.
