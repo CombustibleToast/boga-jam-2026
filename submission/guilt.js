@@ -40,6 +40,8 @@ const guiltAdStartTimeSeconds = 170;
 const skipAttemptCooldownMs = config.skipCooldownMs;
 let lastSkipTimestamp = undefined;
 let currentSkipString = "Skip";
+let cooldownIntervalId = null;
+let cooldownTimeoutId = null;
 
 // Escalations
 let skipAttempts = 0;
@@ -183,14 +185,38 @@ function playGuiltAudio() {
 	});
 }
 
-function showRateLimitMessage(timestamp){
-	const cooldownRemaining = skipAttemptCooldownMs - (timestamp - lastSkipTimestamp);
-	const cooldownRemainingSeconds = (cooldownRemaining/1000).toFixed(1);
-	skipText.textContent = `Wait ${cooldownRemainingSeconds}...`;
+function clearCooldownTimers() {
+	if (cooldownIntervalId !== null) {
+		clearInterval(cooldownIntervalId);
+		cooldownIntervalId = null;
+	}
 
-	// Change back to normal when cooldown is up
-	// Definitely causes a race condition with itself if multiple clicks but whatever it's fine for this
-	setTimeout(() => {
+	if (cooldownTimeoutId !== null) {
+		clearTimeout(cooldownTimeoutId);
+		cooldownTimeoutId = null;
+	}
+}
+
+function showRateLimitMessage(timestamp){
+	clearCooldownTimers();
+
+	const updateCooldownText = () => {
+		const cooldownRemaining = Math.max(0, skipAttemptCooldownMs - (performance.now() - lastSkipTimestamp));
+		const cooldownRemainingSeconds = (cooldownRemaining / 1000).toFixed(1);
+		skipText.textContent = cooldownRemaining > 0
+			? `Wait ${cooldownRemainingSeconds}...`
+			: currentSkipString;
+	};
+
+	updateCooldownText();
+
+	cooldownIntervalId = setInterval(() => {
+		updateCooldownText();
+	}, 100);
+
+	const cooldownRemaining = Math.max(0, skipAttemptCooldownMs - (performance.now() - lastSkipTimestamp));
+	cooldownTimeoutId = setTimeout(() => {
+		clearCooldownTimers();
 		skipText.textContent = currentSkipString;
 	}, cooldownRemaining);
 }
