@@ -7,7 +7,6 @@ const skipText = document.getElementById('skipText');
 const xButton = document.getElementById('xButton');
 
 // Media
-//const guiltAudioPath = './skip-audio.mp3';
 // const guiltAudioPath = './CottonEyeJoe.mp3';
 const guiltAudioPath = './guilt_audio.mp3';
 const mainAdFinishTimeSeconds = 160; 
