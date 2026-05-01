@@ -8,12 +8,13 @@ const xButton = document.getElementById('xButton');
 
 // Media
 //const guiltAudioPath = './skip-audio.mp3';
-const guiltAudioPath = './CottonEyeJoe.mp3';
-const mainAdFinishTimeSeconds = 5; // TODO: Fill these values out when we get the actual video in
-const guiltAdStartTimeSeconds = 0; // TODO: Fill these values out when we get the actual video in
+// const guiltAudioPath = './CottonEyeJoe.mp3';
+const guiltAudioPath = './guilt_audio.mp3';
+const mainAdFinishTimeSeconds = 140; 
+const guiltAdStartTimeSeconds = 170; 
 
 // Skip action globals
-const skipAttemptCooldownMs = 1000;
+const skipAttemptCooldownMs = 4000;
 let lastSkipTimestamp = undefined;
 let currentSkipString = "Skip";
 
@@ -26,7 +27,8 @@ const escalationFirstStageAttempts = 3;
 const escalationFirstStageString = "Why skip us?"
 
 //Escalation stage 2
-const escalationSecondStageAttempts = 5;
+const escalationSecondStageAttempts = 6;
+let guiltAdPlaying = false;
 
 (function (window, document) {
 
@@ -94,8 +96,9 @@ function handleButtonClick(event){
 		return;
 	}
 
-	// They're not on cooldown, so do a successful skip and start a cooldown
+	// They're not on cooldown, so do a successful skip attempt and start a cooldown
 	lastSkipTimestamp = event.timeStamp;
+	skipText.textContent = 'Skipping...';
 
 	// Handle Escalations
 	escalation = incrementEscalation(1);
@@ -110,7 +113,10 @@ function handleButtonClick(event){
 	// "Play" (seek to) guilt video
 	// Change button text
 	if (escalation == 1) {
-		window.top.postMessage({ type: 'seekTo', value: guiltAdStartTimeSeconds }, "*")
+		if (!guiltAdPlaying){
+			window.top.postMessage({ type: 'seekTo', value: guiltAdStartTimeSeconds }, "*")
+			guiltAdPlaying = true;
+		}
 
 		currentSkipString = escalationFirstStageString;
 		skipText.innerHTML = escalationFirstStageString;
@@ -139,6 +145,7 @@ function incrementEscalation(incrementAmount){
 }
 
 function playGuiltAudio() {
+	// By watching this short advertisement, you are helping support a small buisiness. Thank you.
 	if (currentAudio) {
 		currentAudio.pause();
 		currentAudio.currentTime = 0;
@@ -157,7 +164,7 @@ function playGuiltAudio() {
 function showRateLimitMessage(timestamp){
 	const cooldownRemaining = skipAttemptCooldownMs - (timestamp - lastSkipTimestamp);
 	const cooldownRemainingSeconds = (cooldownRemaining/1000).toFixed(1);
-	skipText.innerHTML = `Wait ${cooldownRemainingSeconds}...`;
+	skipText.textContent = `Wait ${cooldownRemainingSeconds}...`;
 
 	// Change back to normal when cooldown is up
 	// Definitely causes a race condition with itself if multiple clicks but whatever it's fine for this
