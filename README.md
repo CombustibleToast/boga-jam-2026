@@ -12,4 +12,6 @@ Features:
 - X button is the thing that actually skips.
 
 Video: 
-Kind and Rewind! A local small business that repairs, restores, and rewinds your tapes!
+"Kind and Rewind” is a deliberately overlong and meandering VHS restoration advertisement. Framed as a small-town business expanding to the internet for the first time, founder and CEO Kim Wexler goes into painstaking detail about this strange business.
+
+It's designed to be believable at first but increasing difficult to sit through to recreate the experience of an unskippable ad overstaying it's welcome.
