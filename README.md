@@ -1,4 +1,9 @@
 # Kitboga Code Jam 2026
+
+<p align="center">
+  <img src="./submission/KnR Logo.png" />
+</p>
+
 "Kind and Rewind"
 
 This repository contains the code for our entry in the Kitboga Code Jam 2026. The project is a combination video and UI.
