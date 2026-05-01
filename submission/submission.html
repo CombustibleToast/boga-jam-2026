@@ -38,6 +38,15 @@
       text-align: center;
       white-space: nowrap;
       cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+    }
+
+    #skipText {
+      user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
     }
 
     #skipButton {
@@ -50,19 +59,35 @@
       width: 30%;
       left: 50%;
       top: 10%;
+      user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
     }
 
     #xButton {
-      display: none;
-      background-color: #00000050;
-      border-radius: 100%;
-      border: 2px solid #000;
-      color: white;
+      display: none; /* Hidden until ad starts */
       position: absolute;
-      right: 2%;
-      top: 2%;
+      top: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      
+      align-items: center;
       justify-content: center;
+      line-height: 1;
+      font-family: sans-serif;
     }
+
+    #xButton:hover {
+      background: rgba(0, 0, 0, 0.8);
+    }
+
 
     #oldskip {
       display: none; /* Hidden until ad starts */
@@ -115,7 +140,7 @@
       <button id="skipButton"></button>
     </div>
     <!-- <button id="debugpause">pause</button> -->
-    <button id="xButton">⤫</button>
+    <button id="xButton">&times;</button>
   </div>
   <script type="text/javascript" src="./guilt.js"></script>
 </body>
