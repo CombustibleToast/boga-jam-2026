@@ -9,7 +9,7 @@
 This repository contains the code for our entry in the Kitboga Code Jam 2026. The project is a combination video and UI.
 
 Features:
-- The button is smaller than the UI implies.
+- The button is smaller than the UI implies, yet hovering the cursor over any part of the area provides UX feedback as if a click SHOULD work.
 - Every skip attempt has a cooldown.
 - Plays a sound effect on click (escalation 0).
 - Plays a guilt trip video after 3 attempts (escalation 1).
