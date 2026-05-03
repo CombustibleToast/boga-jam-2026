@@ -39,3 +39,20 @@ const DIFFICULTY = 'normal'; // 'easy', 'normal', or 'hard'
 
 Individual values can also be tweaked directly inside the preset objects in `DIFFICULTY_PRESETS`.
 
+## Team
+Alex - froggydogworld (Discord)
+
+Ena - CombustibleToast (Github), combustibletoast (Discord)
+
+Flower - jestpurr
+
+Chris - countchrisdo (Github and Discord)
+
+### Credits
+**Video** - Flower (Kim Wexler), Chris, Alex
+
+**Logo** - Chris
+
+**UI** - Ena, Chris
+
+**Voice Clip** - Ena
