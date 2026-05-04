@@ -1,7 +1,7 @@
 # Kitboga Code Jam 2026
 
 <p align="center">
-  <img src="./submission/KnR Logo.png" width="350" alt="Kind and Rewind Logo" />
+  <img src="./KnR Logo.png" width="350" alt="Kind and Rewind Logo" />
 </p>
 
 This repository contains the code for our entry "Kind and Rewind" in the Kitboga Code Jam 2026. The project is a combination of video and UI that recreates the experience of unskippable internet ads but with escalating consequences for each skip attempt.
