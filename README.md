@@ -56,3 +56,21 @@ Chris - countchrisdo (Github and Discord)
 **UI** - Ena, Chris
 
 **Voice Clip** - Ena
+
+
+
+Kind and Rewind - VHS Small Business Guilt
+
+https://github.com/CombustibleToast/boga-jam-2026
+
+The ad tries to guilt the viewer into buying their product more and more as they try to skip.
+
+The video is split into two parts: the main ad and the guilt trip. When the main ad is done playing, the ad fails like normal to the viewer. After enough skip attempts, the video seeks to the guilt trip section and plays that instead.
+
+The skip button has a cooldown; when it is clicked, the cooldown is shown. The first two clicks play a guilt trip audio clip. The third click plays the guilt trip video. The sixth clip disables the skip button and creates a small x button in the top right. The number of clicks for each escalation stage is configurable.
+
+For added frustration, there is UX response to hovering the skip button, but the only functional "button" part of the skip button is smaller than the UI implies.
+
+No AI was used.
+
+combustibletoast
