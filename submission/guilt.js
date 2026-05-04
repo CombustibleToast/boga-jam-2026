@@ -31,7 +31,6 @@ const DIFFICULTY_PRESETS = {
 const config = DIFFICULTY_PRESETS[DIFFICULTY];
 
 // Media
-// const guiltAudioPath = './CottonEyeJoe.mp3';
 const guiltAudioPath = './guilt_audio.mp3';
 const mainAdFinishTimeSeconds = 160;
 const guiltAdStartTimeSeconds = 170;
